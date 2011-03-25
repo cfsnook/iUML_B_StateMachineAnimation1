@@ -52,7 +52,7 @@
       <command
             description="%command.description.animate"
             id="ac.soton.eventb.statemachines.animation.AnimateAction"
-            name="%command.name.animate">
+            name="%command.name.run">
       </command>
       <command
             description="%command.description.stop"
