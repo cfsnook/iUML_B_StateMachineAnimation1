@@ -18,6 +18,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eventb.emf.core.machine.Machine;
 
@@ -75,6 +76,15 @@ public class StopAction extends AbstractHandler {
 					}
 					
 					editingDomain.getCommandStack().execute(cc);
+					
+					// switch to Event-B perspective
+					IPerspectiveDescriptor perspective = HandlerUtil
+							.getActiveWorkbenchWindow(event)
+							.getWorkbench()
+							.getPerspectiveRegistry()
+							.findPerspectiveWithId("org.eventb.ui.perspective.eventb");
+					if (perspective != null)
+						editor.getSite().getPage().setPerspective(perspective);
 				}
 			}
 		}
