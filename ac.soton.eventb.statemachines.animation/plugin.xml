@@ -30,20 +30,16 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="popup:org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu?after=ac.soton.eventb.statemachines.transformation.translateToEventB">
+            locationURI="toolbar:ac.soton.eventb.statemachines.diagram.toolbar">
          <command
                commandId="ac.soton.eventb.statemachines.animation.AnimateAction"
-               icon="icons/Animate.png">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
+               icon="icons/Animate.png"
+               style="push">
          </command>
          <command
                commandId="ac.soton.eventb.statemachines.animation.StopAction"
-               icon="icons/StopAnimation.png">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
+               icon="icons/StopAnimation.png"
+               style="push">
          </command>
       </menuContribution>
    </extension>
