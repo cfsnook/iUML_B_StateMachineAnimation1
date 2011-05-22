@@ -69,15 +69,6 @@
                         value="ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditorID">
                   </equals>
                </with>
-               <with
-                     variable="selection">
-                  <iterate
-                        ifEmpty="false">
-                     <instanceof
-                           value="ac.soton.eventb.statemachines.diagram.edit.parts.DiagramRootEditPart">
-                     </instanceof>
-                  </iterate>
-               </with>
             </and>
          </activeWhen>
       </handler>
@@ -91,15 +82,6 @@
                   <equals
                         value="ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditorID">
                   </equals>
-               </with>
-               <with
-                     variable="selection">
-                  <iterate
-                        ifEmpty="false">
-                     <instanceof
-                           value="ac.soton.eventb.statemachines.diagram.edit.parts.DiagramRootEditPart">
-                     </instanceof>
-                  </iterate>
                </with>
             </and>
          </activeWhen>
