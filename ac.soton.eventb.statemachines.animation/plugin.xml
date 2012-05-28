@@ -30,7 +30,8 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="toolbar:ac.soton.eventb.statemachines.diagram.toolbar?after=additions">
+            allPopups="true"
+            locationURI="toolbar:ac.soton.eventb.emf.diagrams.toolbar?after=animations">
          <command
                commandId="ac.soton.eventb.statemachines.animation.AnimateAction"
                icon="icons/Animate.png"
