@@ -7,6 +7,7 @@
  */
 package ac.soton.eventb.statemachines.animation.policies;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -22,6 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.CreateEditPolicies
 import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.IEditPolicyProvider;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eventb.emf.core.machine.Event;
 
 import ac.soton.eventb.statemachines.Transition;
 import ac.soton.eventb.statemachines.animation.StatemachineAnimationPlugin;
@@ -48,14 +50,25 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 			protected void showSelection() {
 				Transition transition = (Transition) ((View) getHost().getModel()).getElement();
 				Animator animator = Animator.getAnimator();
-				
+
 				//FIXME: more elaborate check required to test if concrete diagram is animated
 				// if animation running and operations available
 				if (animator.isRunning()
 						&& transition.getOperations() != null 
 						&& !transition.getOperations().isEmpty()) {
-					EList<?> operations = transition.getOperations();
 					
+					List<Operation> enabledOperations = animator.getCurrentState().getEnabledOperations();
+					List<Operation> operations = new ArrayList<Operation>();
+					EList<Event> events = transition.getElaborates();
+//					EList<?> operations = transition.getOperations();
+					for (Operation op : enabledOperations){
+						String opName = op.getName();
+						for (Event ev : events){
+							if (opName.equals(ev.getName()) ){
+								operations.add(op);
+							}	
+						}
+					}
 					// show selection menu
 					PopupMenu menu = new PopupMenu(operations, new LabelProvider() {
 

@@ -7,10 +7,15 @@
  */
 package ac.soton.eventb.statemachines.animation;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eventb.core.IMachineRoot;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eventb.core.IEventBRoot;
+import org.eventb.emf.core.machine.Machine;
+
+import ac.soton.eventb.statemachines.Statemachine;
+import ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditorPlugin;
+import ac.soton.eventb.statemachines.diagram.preferences.custom.IStatemachinesPreferenceConstants;
 import de.prob.core.Animator;
 import de.prob.core.command.LoadEventBModelCommand;
 import de.prob.exceptions.ProBException;
@@ -22,9 +27,11 @@ import de.prob.exceptions.ProBException;
 public class DiagramAnimator {
 
 	private static DiagramAnimator animator;
-	private IMachineRoot machine;
-	private EObject root;
-
+	private Machine machine;
+	private List<Statemachine> rootStatemachines = new ArrayList<Statemachine>();
+	private Boolean savePref = StatemachinesDiagramEditorPlugin.getInstance()
+			.getPreferenceStore().getBoolean(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE);
+	
 	/**
 	 * @return
 	 */
@@ -37,50 +44,54 @@ public class DiagramAnimator {
 	/**
 	 * @return
 	 */
-	public EObject getRoot() {
-		return root;
+	public List<Statemachine> getRootStatemachines() {
+		return rootStatemachines;
 	}
 
 	/**
 	 * @return
 	 */
-	public IMachineRoot getMachine() {
+	public Machine getMachine() {
 		return machine;
 	}
 
 	/**
+	 * Starts the diagram animations including starting ProB animator for the given eventBRoot
+	 * 
+	 * rootStatemachines must be obtained from the elements of the open editors otherwise the diagrams will not update
+	 * 
+	 * 
 	 * @throws ProBException 
 	 * 
 	 */
-	public void start(IMachineRoot machine, EObject root) throws ProBException {
+	public void start(Machine machine, List<Statemachine> rootStatemachines, IEventBRoot root) throws ProBException {
 		this.machine = machine;
-		this.root = root;
-		
+		this.rootStatemachines = rootStatemachines;
+		//this.root = root;
+		System.out.println("Starting ProB for " + machine);
+		//turn off autosave
+		if (savePref ==  null){
+			StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, false);
+		}
 		// start ProB
 		Animator probAnimator = Animator.getAnimator();
-		LoadEventBModelCommand.load(probAnimator, machine);
+		LoadEventBModelCommand.load(probAnimator, root);
 	}
+	
 	
 	public void stop() {
 		machine = null;
-		root = null;
+		rootStatemachines.clear();
+		//restore autosave preference
+		StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, savePref);
+		savePref = null;
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isRunning() {
-		boolean targetSet = machine != null && root != null
-				&& root.eResource() != null && root.eResource().isLoaded();
-		return Animator.getAnimator().isRunning() && targetSet;
+		return Animator.getAnimator().isRunning() && machine != null;
 	}
 
-	/**
-	 * @param root2
-	 * @return
-	 */
-	public boolean isRunningFor(EObject root2) {
-		return isRunning() && EcoreUtil.getURI(root).equals(EcoreUtil.getURI(root2));
-	}
-	
 }
