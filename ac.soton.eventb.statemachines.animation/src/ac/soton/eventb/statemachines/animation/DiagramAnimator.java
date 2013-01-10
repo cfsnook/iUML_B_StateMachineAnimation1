@@ -29,8 +29,7 @@ public class DiagramAnimator {
 	private static DiagramAnimator animator;
 	private Machine machine;
 	private List<Statemachine> rootStatemachines = new ArrayList<Statemachine>();
-	private Boolean savePref = StatemachinesDiagramEditorPlugin.getInstance()
-			.getPreferenceStore().getBoolean(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE);
+	private Boolean savePref = null;
 	
 	/**
 	 * @return
@@ -71,8 +70,10 @@ public class DiagramAnimator {
 		System.out.println("Starting ProB for " + machine);
 		//turn off autosave
 		if (savePref ==  null){
-			StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, false);
+			savePref = StatemachinesDiagramEditorPlugin.getInstance()
+					.getPreferenceStore().getBoolean(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE);
 		}
+		StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, false);
 		// start ProB
 		Animator probAnimator = Animator.getAnimator();
 		LoadEventBModelCommand.load(probAnimator, root);
@@ -83,7 +84,9 @@ public class DiagramAnimator {
 		machine = null;
 		rootStatemachines.clear();
 		//restore autosave preference
-		StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, savePref);
+		if (savePref!=null){
+			StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, savePref);
+		}
 		savePref = null;
 	}
 
