@@ -124,18 +124,19 @@ public class AnimationListener implements IAnimationListener {
 					}
 				}
 				
+				//update states so we know which are active below
+				editingDomain.getCommandStack().execute(cc);
+				cc = new CompoundCommand();
+				
 				for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.TRANSITION, true)) {
 					if (object == null) continue;
 					Transition transition = (Transition) object;
 					// collect enabled operations
 					EList<Operation> ops = new BasicEList<Operation>();
 					for (Event event : transition.getElaborates()) {
-//						AbstractNode sourceState = transition.getSource();
-//						String sourceName = sourceState instanceof ac.soton.eventb.statemachines.State ?
-//								((ac.soton.eventb.statemachines.State)sourceState).getName() : "Initial";
-						if (enabledOperations.containsKey(event.getName())
-//							&& (activeStates.contains(sourceName) || "Initial".equals(sourceName))
-							)
+						ac.soton.eventb.statemachines.State sourceState = 
+								transition.getSource() instanceof ac.soton.eventb.statemachines.State? ((ac.soton.eventb.statemachines.State)transition.getSource()) : null ;
+						if (enabledOperations.containsKey(event.getName()) && (sourceState==null || sourceState.isActive()) )
 							ops.addAll(enabledOperations.get(event.getName()));
 					}
 					// set operations
