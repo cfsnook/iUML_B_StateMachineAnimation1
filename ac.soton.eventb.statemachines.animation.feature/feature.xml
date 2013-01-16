@@ -2,8 +2,9 @@
 <feature
       id="ac.soton.eventb.statemachines.animation.feature"
       label="%featureName"
-      version="1.1.0.qualifier"
-      provider-name="%providerName">
+      version="1.2.0"
+      provider-name="%providerName"
+      plugin="ac.soton.iumlb.branding">
 
    <description url="http://www.example.com/description">
       %description
@@ -22,12 +23,11 @@
    </url>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="ac.soton.eventb.statemachines.diagram" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.7.0" match="compatible"/>
       <import plugin="org.eclipse.gmf.runtime.diagram.ui" version="1.5.0" match="compatible"/>
       <import plugin="org.eventb.core" version="2.3.0" match="compatible"/>
-      <import plugin="de.prob.ui" version="7.1.1" match="compatible"/>
-      <import plugin="de.prob.core" version="9.2.1" match="compatible"/>
+      <import feature="ac.soton.eventb.statemachines.feature" version="1.3.0" match="compatible"/>
+      <import feature="de.prob2.feature" version="2.3.5.201211271439" match="compatible"/>
    </requires>
 
    <plugin
