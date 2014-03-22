@@ -102,9 +102,7 @@ public class StopAction extends AbstractHandler {
 					if (perspective != null)
 						editor.getSite().getPage().setPerspective(perspective);
 				}
-//				if (diagramEditor.isDirty()){
-//					diagramEditor.doSave(new NullProgressMonitor());
-//				}
+				resource.setModified(false);
 			}
 
 		}
