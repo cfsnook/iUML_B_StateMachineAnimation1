@@ -14,6 +14,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -25,6 +26,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eventb.core.IEventBRoot;
 import org.eventb.emf.core.EventBElement;
@@ -36,6 +38,7 @@ import org.rodinp.core.RodinCore;
 import ac.soton.eventb.statemachines.Statemachine;
 import ac.soton.eventb.statemachines.animation.DiagramAnimator;
 import ac.soton.eventb.statemachines.animation.StatemachineAnimationPlugin;
+import de.bmotionstudio.gef.editor.BMotionStudioEditor;
 import de.prob.exceptions.ProBException;
 
 /**
@@ -46,9 +49,12 @@ import de.prob.exceptions.ProBException;
  */
 public class AnimateAction extends AbstractHandler {
 
+	private static final String BMOTION_STUDIO_EXT = "bmso";
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart activeEditor = HandlerUtil.getActiveEditorChecked(event);
+		List<IFile> bmsFiles = new ArrayList<IFile>();
 		if (activeEditor instanceof DiagramEditor) {
 			DiagramEditor diagramEditor = (DiagramEditor) activeEditor;
 			if (diagramEditor.isDirty()){
@@ -72,19 +78,43 @@ public class AnimateAction extends AbstractHandler {
 			    					statemachines.add((Statemachine) element);
 		    				}
 		    	    	}
+			    		//also look for BmotionStudio editors on the same machine
+			    		if (editor instanceof BMotionStudioEditor) {
+			    			BMotionStudioEditor bmsEditor = (BMotionStudioEditor) editor;
+			    			Object pf = bmsEditor.getVisualization().getProjectFile();
+
+			    			if (pf instanceof IFile){
+				    			String machineName = bmsEditor.getVisualization().getMachineName();
+				    			IProject project = ((IFile)pf).getProject();
+			    				if ( 
+			    					BMOTION_STUDIO_EXT.equals(((IFile)pf).getFileExtension()) &&
+			    					machineName.startsWith(machine.getName()) &&
+			    					root.getRodinProject().getProject().equals(project)
+			    					){
+			    					if (!bmsFiles.contains(pf)) bmsFiles.add(((IFile)pf));
+			    				}
+			    			}
+		    	    	}
 		    		}
 		    	}
 
 				try {
 					// run animation
 					DiagramAnimator diagramAnimator = DiagramAnimator.getAnimator();
-					diagramAnimator.start(machine, statemachines, root);
+					diagramAnimator.start(machine, statemachines, root, bmsFiles);
 					// switch to ProB perspective
 					IPerspectiveDescriptor perspective = HandlerUtil
 							.getActiveWorkbenchWindow(event)
 							.getWorkbench()
 							.getPerspectiveRegistry()
 							.findPerspectiveWithId("de.prob.ui.perspective");
+					if (diagramAnimator.isRunningBMotionStudio()){
+						// switch to BMotionStudio perspective
+						IPerspectiveDescriptor bmsPerspective = PlatformUI
+								.getWorkbench().getPerspectiveRegistry()
+								.findPerspectiveWithId("de.bmotionstudio.gef.editor.perspective");
+						if (bmsPerspective != null) perspective = bmsPerspective;
+					}
 					if (perspective != null) {
 						activeEditor.getSite().getPage().setPerspective(perspective);
 						activeEditor.getSite().getPage().setEditorAreaVisible(true);

@@ -7,8 +7,11 @@
  */
 package ac.soton.eventb.statemachines.animation;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
 
 /**
  * The activator class controls the plug-in life cycle
@@ -54,4 +57,16 @@ public class StatemachineAnimationPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public static void logError(String message, Exception e) {
+		StatemachineAnimationPlugin.getDefault().getLog().log(new Status(
+				 IStatus.ERROR,
+				 StatemachineAnimationPlugin.PLUGIN_ID,
+				 IStatus.ERROR,
+				 message,
+				 e));
+	}
+	
+	public static void logError(String message) {
+		logError(message,null);
+	}
 }
