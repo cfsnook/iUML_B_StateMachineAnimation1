@@ -15,6 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -50,6 +51,9 @@ public class AnimateAction extends AbstractHandler {
 		IEditorPart activeEditor = HandlerUtil.getActiveEditorChecked(event);
 		if (activeEditor instanceof DiagramEditor) {
 			DiagramEditor diagramEditor = (DiagramEditor) activeEditor;
+			if (diagramEditor.isDirty()){
+				diagramEditor.doSave(new NullProgressMonitor());
+			}
 			EObject element = diagramEditor.getDiagram().getElement();
 			if (element instanceof Statemachine){
 				Machine machine = (Machine) ((Statemachine)element).getContaining(MachinePackage.Literals.MACHINE);
