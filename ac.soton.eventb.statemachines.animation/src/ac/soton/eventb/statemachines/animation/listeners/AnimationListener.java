@@ -50,7 +50,6 @@ public class AnimationListener implements IAnimationListener {
 			//TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(machine.eResource()); //getEditingDomain(machine);
 			for(Statemachine statemachine : animator.getRootStatemachines()){	
 				TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(statemachine);
-				System.out.println("editing  "+ editingDomain); //+" - "+statemachine.getName()+" should use: "+editingDomain2);
 				Map<String, Variable> variables = currentState.getValues();
 				List<Operation> operations = currentState.getEnabledOperations();
 				Map<String, EList<Operation>> enabledOperations = new HashMap<String, EList<Operation>>();
@@ -134,9 +133,7 @@ public class AnimationListener implements IAnimationListener {
 					// collect enabled operations
 					EList<Operation> ops = new BasicEList<Operation>();
 					for (Event event : transition.getElaborates()) {
-						ac.soton.eventb.statemachines.State sourceState = 
-								transition.getSource() instanceof ac.soton.eventb.statemachines.State? ((ac.soton.eventb.statemachines.State)transition.getSource()) : null ;
-						if (enabledOperations.containsKey(event.getName()) && (sourceState==null || sourceState.isActive()) )
+						if (enabledOperations.containsKey(event.getName()))
 							ops.addAll(enabledOperations.get(event.getName()));
 					}
 					// set operations
