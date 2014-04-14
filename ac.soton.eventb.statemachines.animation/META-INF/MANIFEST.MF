@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: ac.soton.eventb.statemachines.animation;singleton:=true
-Bundle-Version: 2.0.0.rc1
+Bundle-Version: 2.0.0
 Bundle-Activator: ac.soton.eventb.statemachines.animation.StatemachineAnimationPlugin
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)",
  ac.soton.eventb.statemachines.diagram;bundle-version="[1.0.0,3.0.0)",
