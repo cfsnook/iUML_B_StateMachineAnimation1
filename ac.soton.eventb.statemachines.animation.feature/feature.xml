@@ -35,6 +35,7 @@
       <import plugin="de.bmotionstudio.gef.editor" version="5.5.0" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.7.0" match="compatible"/>
       <import plugin="org.rodinp.core" version="1.7.0" match="compatible"/>
+      <import feature="de.prob2.feature" version="3.0.2.201403281050" match="compatible"/>
    </requires>
 
    <plugin
