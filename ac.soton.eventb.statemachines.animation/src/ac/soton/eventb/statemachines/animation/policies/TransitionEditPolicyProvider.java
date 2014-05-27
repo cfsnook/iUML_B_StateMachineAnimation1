@@ -49,6 +49,7 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 			@Override
 			protected void showSelection() {
 				Transition transition = (Transition) ((View) getHost().getModel()).getElement();
+				getHost().getViewer().deselectAll(); 	//deselect the transition ready for next interaction
 				Animator animator = Animator.getAnimator();
 
 				//FIXME: more elaborate check required to test if concrete diagram is animated
