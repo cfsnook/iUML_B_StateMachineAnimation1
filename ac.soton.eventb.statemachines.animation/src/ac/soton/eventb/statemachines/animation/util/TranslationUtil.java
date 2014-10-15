@@ -22,8 +22,8 @@ import de.prob.core.domainobjects.Variable;
  */
 public class TranslationUtil {
 
-	private static final Object MATH_EMPTY_SET = "∅";
-	private static final String MATH_MAPLET = "↦";
+	private static final Object MATH_EMPTY_SET = "\u2205";
+	private static final String MATH_MAPLET = "\u21a6";
 	
 	/**
 	 * Translate a variable that represents a set of simple elements v.2 (ProB core 6.0 with EventB math symbols).
