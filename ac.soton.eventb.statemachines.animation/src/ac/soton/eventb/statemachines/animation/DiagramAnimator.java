@@ -29,8 +29,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import ac.soton.eventb.statemachines.Statemachine;
-import ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditorPlugin;
-import ac.soton.eventb.statemachines.diagram.preferences.custom.IStatemachinesPreferenceConstants;
 import de.bmotionstudio.gef.editor.Animation;
 import de.bmotionstudio.gef.editor.BMotionEditorPlugin;
 import de.bmotionstudio.gef.editor.BMotionStudioEditor;
@@ -48,7 +46,6 @@ public class DiagramAnimator {
 	private static DiagramAnimator animator;
 	private Machine machine;
 	private List<Statemachine> rootStatemachines = new ArrayList<Statemachine>();
-	private Boolean savePref = null;
 	private boolean bms = false;
 	
 	/**
@@ -86,14 +83,7 @@ public class DiagramAnimator {
 	public void start(Machine machine, List<Statemachine> rootStatemachines, IEventBRoot root, List<IFile> bmsFiles) throws ProBException {
 		this.machine = machine;
 		this.rootStatemachines = rootStatemachines;
-		//this.root = root;
 		System.out.println("Starting ProB for " + machine);
-		//turn off autosave
-		if (savePref ==  null){
-			savePref = StatemachinesDiagramEditorPlugin.getInstance()
-					.getPreferenceStore().getBoolean(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE);
-		}
-		StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, false);
 		// start ProB
 		Animator probAnimator = Animator.getAnimator();
 		LoadEventBModelCommand.load(probAnimator, root);
@@ -109,11 +99,6 @@ public class DiagramAnimator {
 	public void stop() {
 		machine = null;
 		rootStatemachines.clear();
-		//restore autosave preference
-		if (savePref!=null){
-			StatemachinesDiagramEditorPlugin.getInstance().getPreferenceStore().setValue(IStatemachinesPreferenceConstants.PREF_AUTOSAVE_ON_DEACTIVATE, savePref);
-		}
-		savePref = null;
 		bms = false;
 	}
 
