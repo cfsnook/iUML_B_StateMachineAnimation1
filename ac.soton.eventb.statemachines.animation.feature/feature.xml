@@ -2,7 +2,7 @@
 <feature
       id="ac.soton.eventb.statemachines.animation.feature"
       label="%featureName"
-      version="2.1.1"
+      version="2.1.2"
       provider-name="%providerName"
       plugin="ac.soton.iumlb.branding">
 
@@ -24,18 +24,21 @@
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.7.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.ide" version="3.7.0" match="compatible"/>
       <import plugin="org.eclipse.gmf.runtime.diagram.ui" version="1.5.0" match="compatible"/>
-      <import feature="ac.soton.eventb.statemachines.feature" version="2.1.0" match="compatible"/>
-      <import plugin="ac.soton.eventb.statemachines.diagram" version="2.1.0" match="compatible"/>
-      <import plugin="org.eventb.core" version="3.0.0" match="compatible"/>
       <import plugin="de.prob.core" version="9.2.1" match="compatible"/>
       <import plugin="de.prob.ui" version="7.1.1" match="compatible"/>
-      <import plugin="org.eventb.emf.core" version="3.1.0" match="compatible"/>
-      <import plugin="ac.soton.eventb.statemachines" version="2.0.0" match="compatible"/>
       <import plugin="de.bmotionstudio.gef.editor" version="5.5.0" match="compatible"/>
-      <import plugin="org.eclipse.ui.ide" version="3.7.0" match="compatible"/>
       <import plugin="org.rodinp.core" version="1.7.0" match="compatible"/>
-      <import feature="de.prob2.feature" version="3.0.2.201403281050" match="compatible"/>
+      <import plugin="org.eventb.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eventb.emf.core" version="4.0.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.emf.core.extension" version="4.0.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.emf.diagrams" version="4.0.1" match="compatible"/>
+      <import plugin="ac.soton.eventb.statemachines" version="3.0.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.statemachines.edit" version="1.0.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.statemachines.diagram" version="2.1.0" match="compatible"/>
+      <import feature="de.prob2.feature" version="3.0.7.201411260843" match="compatible"/>
+      <import feature="ac.soton.eventb.statemachines.feature" version="3.0.0" match="compatible"/>
    </requires>
 
    <plugin
