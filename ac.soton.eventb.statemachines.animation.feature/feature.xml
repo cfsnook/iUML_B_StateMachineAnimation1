@@ -35,10 +35,10 @@
       <import plugin="ac.soton.eventb.emf.core.extension" version="4.0.0" match="compatible"/>
       <import plugin="ac.soton.eventb.emf.diagrams" version="4.0.1" match="compatible"/>
       <import plugin="ac.soton.eventb.statemachines" version="3.0.0" match="compatible"/>
-      <import plugin="ac.soton.eventb.statemachines.edit" version="1.0.0" match="compatible"/>
-      <import plugin="ac.soton.eventb.statemachines.diagram" version="2.1.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.statemachines.diagram" version="3.0.0" match="compatible"/>
       <import feature="de.prob2.feature" version="3.0.7.201411260843" match="compatible"/>
       <import feature="ac.soton.eventb.statemachines.feature" version="3.0.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.statemachines.edit" version="2.0.0" match="compatible"/>
    </requires>
 
    <plugin
