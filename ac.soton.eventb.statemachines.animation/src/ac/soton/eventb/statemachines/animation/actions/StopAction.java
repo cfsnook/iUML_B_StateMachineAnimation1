@@ -29,7 +29,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import ac.soton.eventb.statemachines.State;
 import ac.soton.eventb.statemachines.Statemachine;
 import ac.soton.eventb.statemachines.StatemachinesPackage;
-import ac.soton.eventb.statemachines.Transition;
 import ac.soton.eventb.statemachines.animation.DiagramAnimator;
 
 /**
@@ -77,18 +76,23 @@ public class StopAction extends AbstractHandler {
 					
 					// clear active states
 					for (EObject object : root.getAllContained(StatemachinesPackage.Literals.STATE, true)) {
-						if (object != null && ((State) object).isActive())
+						if (object != null) {
 							cc.append(SetCommand.create(editingDomain, object,
 								StatemachinesPackage.Literals.STATE__ACTIVE, 
 								SetCommand.UNSET_VALUE));
+							cc.append(SetCommand.create(editingDomain, object,
+									StatemachinesPackage.Literals.STATE__ACTIVE_INSTANCES, 
+									SetCommand.UNSET_VALUE));
+						}
 					}
 					
 					// clear enabled transitions
 					for (EObject object : root.getAllContained(StatemachinesPackage.Literals.TRANSITION, true)) {
-						if (object != null && ((Transition) object).getOperations() != null && !((Transition) object).getOperations().isEmpty())
+						if (object != null) { // && ((Transition) object).getOperations() != null && !((Transition) object).getOperations().isEmpty())
 							cc.append(SetCommand.create(editingDomain, object,
 								StatemachinesPackage.Literals.TRANSITION__OPERATIONS,
 								SetCommand.UNSET_VALUE));
+						}
 					}
 					
 					editingDomain.getCommandStack().execute(cc);
