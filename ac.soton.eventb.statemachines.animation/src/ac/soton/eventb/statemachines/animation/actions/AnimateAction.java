@@ -38,6 +38,7 @@ import org.rodinp.core.RodinCore;
 import ac.soton.eventb.statemachines.Statemachine;
 import ac.soton.eventb.statemachines.animation.DiagramAnimator;
 import ac.soton.eventb.statemachines.animation.StatemachineAnimationPlugin;
+import ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditor;
 import de.bmotionstudio.gef.editor.BMotionStudioEditor;
 import de.prob.exceptions.ProBException;
 
@@ -71,6 +72,9 @@ public class AnimateAction extends AbstractHandler {
 			    	for(IEditorReference editorRef: pg.getEditorReferences()){
 			    		IEditorPart editor = editorRef.getEditor(true);
 			    		if (editor instanceof DiagramEditor) {
+			    			if (editor instanceof StatemachinesDiagramEditor){
+			    				((StatemachinesDiagramEditor)editor).startAnimating();
+			    			}
 			    			diagramEditor = (DiagramEditor) editor;
 			    			element = diagramEditor.getDiagram().getElement();
 			    			Resource resource = element.eResource();

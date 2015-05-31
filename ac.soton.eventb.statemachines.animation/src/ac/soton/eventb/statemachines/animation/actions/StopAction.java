@@ -17,6 +17,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -30,6 +31,7 @@ import ac.soton.eventb.statemachines.State;
 import ac.soton.eventb.statemachines.Statemachine;
 import ac.soton.eventb.statemachines.StatemachinesPackage;
 import ac.soton.eventb.statemachines.animation.DiagramAnimator;
+import ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditor;
 
 /**
  * Stops diagram animation with ProB.
@@ -37,6 +39,7 @@ import ac.soton.eventb.statemachines.animation.DiagramAnimator;
  * @author vitaly
  *
  */
+
 public class StopAction extends AbstractHandler {
 
 	@Override
@@ -60,6 +63,7 @@ public class StopAction extends AbstractHandler {
 				DiagramEditor diagramEditor = (DiagramEditor) editor;
 				//diagramEditor.getEditingDomain().getCommandStack().undo();
 				EObject element = diagramEditor.getDiagram().getElement();
+				
 				Resource resource = element.eResource();
 				
 				if (false == element instanceof Statemachine)
@@ -107,6 +111,9 @@ public class StopAction extends AbstractHandler {
 						editor.getSite().getPage().setPerspective(perspective);
 				}
 				resource.setModified(false);
+				if (editor instanceof StatemachinesDiagramEditor){
+					((StatemachinesDiagramEditor)editor).stopAnimating();
+				}
 			}
 
 		}
