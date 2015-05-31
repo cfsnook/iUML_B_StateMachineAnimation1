@@ -15,12 +15,18 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.transaction.RecordingCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eventb.core.IEventBRoot;
+import org.eventb.emf.core.Attribute;
+import org.eventb.emf.core.AttributeType;
+import org.eventb.emf.core.CoreFactory;
 import org.eventb.emf.core.machine.Machine;
 import org.xml.sax.SAXException;
 
@@ -83,6 +89,20 @@ public class DiagramAnimator {
 	public void start(Machine machine, List<Statemachine> rootStatemachines, IEventBRoot root, List<IFile> bmsFiles) throws ProBException {
 		this.machine = machine;
 		this.rootStatemachines = rootStatemachines;
+		for (final Statemachine sm : rootStatemachines){
+			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
+			final Attribute animatingAttribute = CoreFactory.eINSTANCE.createAttribute();
+			animatingAttribute.setType(AttributeType.BOOLEAN);
+			animatingAttribute.setValue(true);
+			editingDomain.getCommandStack().execute(
+				new RecordingCommand(editingDomain){
+					@Override
+					protected void doExecute() {
+						sm.getAttributes().put("ac.soton.eventb.statemachines.animation", animatingAttribute);
+					}	
+				}
+			);
+		}
 		System.out.println("Starting ProB for " + machine);
 		// start ProB
 		Animator probAnimator = Animator.getAnimator();
@@ -97,6 +117,17 @@ public class DiagramAnimator {
 	
 	
 	public void stop() {
+		for (final Statemachine sm : rootStatemachines){
+			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
+			editingDomain.getCommandStack().execute(
+				new RecordingCommand(editingDomain){
+					@Override
+					protected void doExecute() {
+						sm.getAttributes().removeKey("ac.soton.eventb.statemachines.animation");
+					}	
+				}
+			);
+		}
 		machine = null;
 		rootStatemachines.clear();
 		bms = false;
