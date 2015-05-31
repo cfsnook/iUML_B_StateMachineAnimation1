@@ -7,7 +7,6 @@
  */
 package ac.soton.eventb.statemachines.animation.listeners;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ import de.prob.core.domainobjects.Variable;
  *
  */
 public class AnimationListener implements IAnimationListener {
-	public static List<TransactionalEditingDomain> editingDomains = new ArrayList<TransactionalEditingDomain>();
+
 	@Override
 	public void currentStateChanged(State currentState, Operation operation) {
 		DiagramAnimator animator = DiagramAnimator.getAnimator();
@@ -83,9 +82,6 @@ public class AnimationListener implements IAnimationListener {
 				}
 
 				//update transitions so we know which are active below
-//				editingDomain.getCommandStack().execute(cc);
-//				cc = new CompoundCommand();
-				
 				for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.TRANSITION, true)) {
 					if (object == null) continue;
 					Transition transition = (Transition) object;
