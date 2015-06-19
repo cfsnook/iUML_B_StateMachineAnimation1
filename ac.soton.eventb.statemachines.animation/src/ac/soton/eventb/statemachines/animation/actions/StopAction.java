@@ -17,17 +17,16 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eventb.core.IEventBRoot;
+import org.eventb.emf.core.machine.Machine;
+import org.eventb.emf.core.machine.MachinePackage;
 
-import ac.soton.eventb.statemachines.State;
 import ac.soton.eventb.statemachines.Statemachine;
 import ac.soton.eventb.statemachines.StatemachinesPackage;
 import ac.soton.eventb.statemachines.animation.DiagramAnimator;
@@ -42,81 +41,84 @@ import ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditor;
 
 public class StopAction extends AbstractHandler {
 
+	private static final String EVENTB_PERSPECTIVE_ID = "org.eventb.ui.perspective.eventb";
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+
+		boolean foundAnimation=false;
 		
-		// stop animator
-		DiagramAnimator.getAnimator().stop();
+		IEditorPart activeEditor = HandlerUtil.getActiveEditorChecked(event);
+		if (!(activeEditor instanceof DiagramEditor)) return null;
+
+		EObject element = ((DiagramEditor)activeEditor).getDiagram().getElement();
+		if (!(element instanceof Statemachine)) return null;
+
+		IEventBRoot root = AnimateAction.getEventBRoot((Machine)((Statemachine)element).getContaining(MachinePackage.Literals.MACHINE));
 		
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench==null) return null;
-		IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-		if (workbenchWindow==null) return null;	
-		IWorkbenchPage activePage = workbenchWindow.getActivePage();
-		if (activePage==null) return null;
-		IEditorReference[] editors = activePage.getEditorReferences();
-		
-		for (IEditorReference editorRef : editors){
-			IEditorPart editor = 	editorRef.getEditor(true);
-			//IEditorPart editor = HandlerUtil.getActiveEditorChecked(event);
-			if (editor instanceof DiagramEditor) {
-				DiagramEditor diagramEditor = (DiagramEditor) editor;
-				//diagramEditor.getEditingDomain().getCommandStack().undo();
-				EObject element = diagramEditor.getDiagram().getElement();
-				
-				Resource resource = element.eResource();
-				
-				if (false == element instanceof Statemachine)
-					return null;
-				
-				// find root diagram element
-				Statemachine root = (Statemachine) element;
-				for (; root.eContainer() instanceof State && root.eContainer().eContainer() instanceof Statemachine; root = (Statemachine) root.eContainer().eContainer());
-				
-				// clear animation artifacts
-				TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
-				if (editingDomain != null && !editingDomain.isReadOnly(resource)) {
-					CompoundCommand cc = new CompoundCommand();
+		for(IWorkbenchPage page : HandlerUtil.getActiveWorkbenchWindow(event).getPages()){
+
+			if (page==null) return null;
+			
+			for (IEditorReference editorRef : page.getEditorReferences()){
+				IEditorPart editor = editorRef.getEditor(true);
 					
-					// clear active states
-					for (EObject object : root.getAllContained(StatemachinesPackage.Literals.STATE, true)) {
-						if (object != null) {
-							cc.append(SetCommand.create(editingDomain, object,
-								StatemachinesPackage.Literals.STATE__ACTIVE, 
-								SetCommand.UNSET_VALUE));
-							cc.append(SetCommand.create(editingDomain, object,
-									StatemachinesPackage.Literals.STATE__ACTIVE_INSTANCES, 
-									SetCommand.UNSET_VALUE));
+				if (editor instanceof StatemachinesDiagramEditor && ((StatemachinesDiagramEditor)editor).isAnimating() ){
+	
+					Statemachine statemachine = (Statemachine) ((StatemachinesDiagramEditor)editor).getDiagram().getElement();
+					if (root.equals(AnimateAction.getEventBRoot(statemachine))) {
+						
+						foundAnimation = true;
+						
+						if (DiagramAnimator.getAnimator().isRunning()) DiagramAnimator.getAnimator().stop();
+						Resource resource = statemachine.eResource();
+						
+						// clear animation artifacts
+						TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(resource);
+						if (editingDomain != null && !editingDomain.isReadOnly(resource)) {
+							
+							CompoundCommand cc = new CompoundCommand();
+							
+							// clear active states
+							for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.STATE, true)) {
+								if (object != null) {
+									cc.append(SetCommand.create(editingDomain, object,
+										StatemachinesPackage.Literals.STATE__ACTIVE, 
+										SetCommand.UNSET_VALUE));
+									cc.append(SetCommand.create(editingDomain, object,
+											StatemachinesPackage.Literals.STATE__ACTIVE_INSTANCES, 
+											SetCommand.UNSET_VALUE));
+								}
+							}
+							
+							// clear enabled transitions
+							for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.TRANSITION, true)) {
+								if (object != null) { // && ((Transition) object).getOperations() != null && !((Transition) object).getOperations().isEmpty())
+									cc.append(SetCommand.create(editingDomain, object,
+										StatemachinesPackage.Literals.TRANSITION__OPERATIONS,
+										SetCommand.UNSET_VALUE));
+								}
+							}
+							
+							editingDomain.getCommandStack().execute(cc);
+							
 						}
+						resource.setModified(false);
+	
+						//tell editor that we are no longer animating
+						((StatemachinesDiagramEditor)editor).stopAnimating();
 					}
-					
-					// clear enabled transitions
-					for (EObject object : root.getAllContained(StatemachinesPackage.Literals.TRANSITION, true)) {
-						if (object != null) { // && ((Transition) object).getOperations() != null && !((Transition) object).getOperations().isEmpty())
-							cc.append(SetCommand.create(editingDomain, object,
-								StatemachinesPackage.Literals.TRANSITION__OPERATIONS,
-								SetCommand.UNSET_VALUE));
-						}
-					}
-					
-					editingDomain.getCommandStack().execute(cc);
-					
-					// switch to Event-B perspective
-					IPerspectiveDescriptor perspective = HandlerUtil
-							.getActiveWorkbenchWindow(event)
-							.getWorkbench()
-							.getPerspectiveRegistry()
-							.findPerspectiveWithId("org.eventb.ui.perspective.eventb");
-					if (perspective != null)
-						editor.getSite().getPage().setPerspective(perspective);
-				}
-				resource.setModified(false);
-				if (editor instanceof StatemachinesDiagramEditor){
-					((StatemachinesDiagramEditor)editor).stopAnimating();
 				}
 			}
-
 		}
+		if (foundAnimation){
+			// switch to Event-B perspective
+			IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getPerspectiveRegistry()
+					.findPerspectiveWithId(EVENTB_PERSPECTIVE_ID);
+			IWorkbenchPage activePage = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
+			if (perspective != null && activePage!=null)	activePage.setPerspective(perspective);
+		}
+		
 		return null;
 	}
 
