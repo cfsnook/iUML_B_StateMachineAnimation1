@@ -54,11 +54,12 @@ public class AnimateAction extends AbstractHandler {
 	private static final String BMOTION_STUDIO_EXT = "bmso";
 	private static final String BMS_RUN_PERSPECTIVE_ID = "de.bmotionstudio.perspective.run";
 	private static final String PROB_PERSPECTIVE_ID = "de.prob.ui.perspective";
-	
+	private static final DiagramAnimator diagramAnimator = DiagramAnimator.getAnimator();
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
-		if (DiagramAnimator.getAnimator().isRunning()) return null;
+		if (diagramAnimator.isRunning()) return null;
+		
 		List<IFile> bmsFiles = new ArrayList<IFile>();
 		
 		IEditorPart activeEditor = HandlerUtil.getActiveEditorChecked(event);
@@ -71,6 +72,7 @@ public class AnimateAction extends AbstractHandler {
 		IEventBRoot root = getEventBRoot(machine);
 		
 		List<Statemachine> statemachines = new ArrayList<Statemachine>();
+		List<StatemachinesDiagramEditor> editors = new ArrayList<StatemachinesDiagramEditor>();
 		//Find all the statemachines that are open as diagrams 
 		// (these must come from the editors as each editor has a different local copy)
 		for(IWorkbenchPage page : HandlerUtil.getActiveWorkbenchWindow(event).getPages()){
@@ -89,7 +91,7 @@ public class AnimateAction extends AbstractHandler {
 	    				statemachines.add(statemachine);
 	    				//let the editor know that we are animating so that it doesn't try to save animation artifacts
 			    		((StatemachinesDiagramEditor)editor).startAnimating();
-			    			
+			    		editors.add((StatemachinesDiagramEditor)editor);
 					}
 		    	}
 				
@@ -115,7 +117,6 @@ public class AnimateAction extends AbstractHandler {
 
 		try {
 			// run animation
-			DiagramAnimator diagramAnimator = DiagramAnimator.getAnimator();
 			diagramAnimator.start(machine, statemachines, root, bmsFiles);
 			
 			//switch to a suitable perspective
@@ -132,6 +133,9 @@ public class AnimateAction extends AbstractHandler {
 				activeEditor.getSite().getPage().setEditorAreaVisible(true);
 			}
 		} catch (ProBException e) {
+			for (StatemachinesDiagramEditor editor : editors){
+				editor.stopAnimating();
+			}
 			StatemachineAnimationPlugin.getDefault().getLog().log(
 					new Status(IStatus.ERROR, StatemachineAnimationPlugin.PLUGIN_ID,
 							"Animation startup failed for: " , e));
