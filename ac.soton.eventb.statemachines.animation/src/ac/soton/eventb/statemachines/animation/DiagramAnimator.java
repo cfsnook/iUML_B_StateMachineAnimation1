@@ -89,20 +89,20 @@ public class DiagramAnimator {
 	public void start(Machine machine, List<Statemachine> rootStatemachines, IEventBRoot root, List<IFile> bmsFiles) throws ProBException {
 		this.machine = machine;
 		this.rootStatemachines = rootStatemachines;
-		for (final Statemachine sm : rootStatemachines){
-			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
-			final Attribute animatingAttribute = CoreFactory.eINSTANCE.createAttribute();
-			animatingAttribute.setType(AttributeType.BOOLEAN);
-			animatingAttribute.setValue(true);
-			editingDomain.getCommandStack().execute(
-				new RecordingCommand(editingDomain){
-					@Override
-					protected void doExecute() {
-						sm.getAttributes().put("ac.soton.eventb.statemachines.animation", animatingAttribute);
-					}	
-				}
-			);
-		}
+//		for (final Statemachine sm : rootStatemachines){
+//			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
+//			final Attribute animatingAttribute = CoreFactory.eINSTANCE.createAttribute();
+//			animatingAttribute.setType(AttributeType.BOOLEAN);
+//			animatingAttribute.setValue(true);
+//			editingDomain.getCommandStack().execute(
+//				new RecordingCommand(editingDomain){
+//					@Override
+//					protected void doExecute() {
+//						sm.getAttributes().put("ac.soton.eventb.statemachines.animation", animatingAttribute);
+//					}	
+//				}
+//			);
+//		}
 		System.out.println("Starting ProB for " + machine);
 		// start ProB
 		Animator probAnimator = Animator.getAnimator();
@@ -117,17 +117,19 @@ public class DiagramAnimator {
 	
 	
 	public void stop() {
-		for (final Statemachine sm : rootStatemachines){
-			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
-			editingDomain.getCommandStack().execute(
-				new RecordingCommand(editingDomain){
-					@Override
-					protected void doExecute() {
-						sm.getAttributes().removeKey("ac.soton.eventb.statemachines.animation");
-					}	
-				}
-			);
-		}
+//		for (final Statemachine sm : rootStatemachines){
+//			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
+//			editingDomain.getCommandStack().execute(
+//				new RecordingCommand(editingDomain){
+//					@Override
+//					protected void doExecute() {
+//						sm.getAttributes().removeKey("ac.soton.eventb.statemachines.animation");
+//					}	
+//				}
+//			);
+//		}
+		Animator probAnimator = Animator.getAnimator();
+		probAnimator.shutdown();
 		machine = null;
 		rootStatemachines.clear();
 		bms = false;
