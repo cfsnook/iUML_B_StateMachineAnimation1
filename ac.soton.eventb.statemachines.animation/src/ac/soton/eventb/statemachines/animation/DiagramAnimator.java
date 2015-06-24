@@ -15,26 +15,21 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eventb.core.IEventBRoot;
-import org.eventb.emf.core.Attribute;
-import org.eventb.emf.core.AttributeType;
-import org.eventb.emf.core.CoreFactory;
 import org.eventb.emf.core.machine.Machine;
 import org.xml.sax.SAXException;
+
+import ac.soton.eventb.statemachines.Statemachine;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
-import ac.soton.eventb.statemachines.Statemachine;
 import de.bmotionstudio.gef.editor.Animation;
 import de.bmotionstudio.gef.editor.BMotionEditorPlugin;
 import de.bmotionstudio.gef.editor.BMotionStudioEditor;
@@ -128,8 +123,6 @@ public class DiagramAnimator {
 //				}
 //			);
 //		}
-		Animator probAnimator = Animator.getAnimator();
-		probAnimator.shutdown();
 		machine = null;
 		rootStatemachines.clear();
 		bms = false;
