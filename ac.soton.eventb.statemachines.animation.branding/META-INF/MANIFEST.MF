@@ -5,3 +5,4 @@ Bundle-SymbolicName: ac.soton.eventb.statemachines.animation.branding
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %pluginVendor
 Bundle-Localization: plugin
+Automatic-Module-Name: ac.soton.eventb.statemachines.animation.branding
