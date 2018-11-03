@@ -4,7 +4,7 @@
       label="%featureName"
       version="2.4.0.qualifier"
       provider-name="%featureVendor"
-      plugin="ac.soton.iumlb.branding"
+      plugin="ac.soton.eventb.statemachines.animation.branding"
       license-feature="org.rodinp.license"
       license-feature-version="1.0.0.release">
 
@@ -46,5 +46,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="ac.soton.eventb.emf.diagrams.branding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
