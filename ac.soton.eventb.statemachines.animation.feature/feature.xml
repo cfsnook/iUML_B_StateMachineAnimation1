@@ -48,7 +48,7 @@
          unpack="false"/>
 
    <plugin
-         id="ac.soton.eventb.emf.diagrams.branding"
+         id="ac.soton.eventb.statemachines.animation.branding"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
