@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ac.soton.eventb.statemachines.sdk"
+      id="ac.soton.eventb.statemachines.animation.sdk"
       label="%featureName"
       version="2.4.0.qualifier"
       provider-name="%featureVendor"
-      plugin="ac.soton.iumlb.branding"
+      plugin="ac.soton.eventb.statemachines.animation.branding"
       license-feature="org.rodinp.license"
       license-feature-version="1.0.0.release">
 
