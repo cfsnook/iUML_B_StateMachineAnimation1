@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ac.soton.eventb.statemachines.sdk"
+      label="%featureName"
+      version="2.4.0.qualifier"
+      provider-name="%featureVendor"
+      plugin="ac.soton.iumlb.branding"
+      license-feature="org.rodinp.license"
+      license-feature-version="1.0.0.release">
+
+   <description>
+      %featureDescription
+   </description>
+
+   <copyright>
+      %featureCopyright
+   </copyright>
+
+   <url>
+      <update label="%updateSiteName" url="http://rodin-b-sharp.sourceforge.net/updates"/>
+   </url>
+
+   <includes
+         id="ac.soton.eventb.statemachines.animation.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="ac.soton.eventb.statemachines.animation.source.feature"
+         version="0.0.0"/>
+
+</feature>
