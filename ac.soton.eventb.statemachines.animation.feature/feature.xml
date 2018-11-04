@@ -2,9 +2,9 @@
 <feature
       id="ac.soton.eventb.statemachines.animation.feature"
       label="%featureName"
-      version="2.3.1.qualifier"
+      version="2.4.0.release"
       provider-name="%featureVendor"
-      plugin="ac.soton.iumlb.branding"
+      plugin="ac.soton.eventb.statemachines.animation.branding"
       license-feature="org.rodinp.license"
       license-feature-version="1.0.0.release">
 
@@ -30,7 +30,7 @@
       <import plugin="de.bmotionstudio.gef.editor" version="5.5.0" match="compatible"/>
       <import plugin="org.eventb.core" version="3.0.0" match="compatible"/>
       <import plugin="org.eventb.emf.core" version="5.0.0" match="compatible"/>
-      <import plugin="ac.soton.eventb.emf.core.extension" version="4.0.0" match="compatible"/>
+      <import plugin="ac.soton.eventb.emf.core.extension" version="5.0.0" match="compatible"/>
       <import plugin="ac.soton.eventb.emf.diagrams" version="4.0.1" match="compatible"/>
       <import plugin="ac.soton.eventb.statemachines" version="4.0.0" match="compatible"/>
       <import plugin="ac.soton.eventb.statemachines.edit" version="2.1.0" match="compatible"/>
@@ -46,5 +46,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="ac.soton.eventb.statemachines.animation.branding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
