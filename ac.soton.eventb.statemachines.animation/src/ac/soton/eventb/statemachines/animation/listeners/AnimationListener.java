@@ -20,7 +20,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eventb.emf.core.EventBNamed;
 import org.eventb.emf.core.machine.Event;
-import org.eventb.emf.core.machine.Machine;
 
 import ac.soton.eventb.statemachines.Statemachine;
 import ac.soton.eventb.statemachines.StatemachinesPackage;
@@ -138,30 +137,29 @@ public class AnimationListener implements IAnimationListener {
 			}
 		}
 		
-		//FIXME: REFINEDVAR is no longer being supported - may remove at some time
-		else if (type == TranslationKind.REFINEDVAR) {
+		else if (type == TranslationKind.REFINEDVAR) {			//REFINEDVAR is no longer being supported - may remove at some time
 			//find refinement level of this machine
-			Machine m = animator.getMachine();
-			int refinementLevel = 0;
-			while(m.getRefines().size() != 0){
-				m = m.getRefines().get(0);
-				refinementLevel++;
-			}
-			// add state of root statemachine
-			if (variables.containsKey((statemachine.getName() + "_" + refinementLevel))){
-				for(Variable variable : variables.values()){
-					if(variable.getValue().equals(variables.get(statemachine.getName() + "_" + refinementLevel).getValue()) && !variable.getIdentifier().equals(statemachine.getName() + "_" + refinementLevel))
-						activeStates.put(variable.getIdentifier(), "TRUE");
-				}
-			}
-			// add states of all nested statemachines
-			for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.STATEMACHINE, true)) {
-				if (object == null) continue;
-				String statemachineName = ((EventBNamed) object).getName() + "_" + refinementLevel;
-				if (variables.containsKey(statemachine))
-					activeStates.put(variables.get(statemachineName).getValue(), "TRUE");
-			}
-			
+//			Machine m = animator.getMachine();
+//			int refinementLevel = 0;
+//			while(m.getRefines().size() != 0){
+//				m = m.getRefines().get(0);
+//				refinementLevel++;
+//			}
+//			// add state of root statemachine
+//			if (variables.containsKey((statemachine.getName() + "_" + refinementLevel))){
+//				for(Variable variable : variables.values()){
+//					if(variable.getValue().equals(variables.get(statemachine.getName() + "_" + refinementLevel).getValue()) && !variable.getIdentifier().equals(statemachine.getName() + "_" + refinementLevel))
+//						activeStates.put(variable.getIdentifier(), "TRUE");
+//				}
+//			}
+//			// add states of all nested statemachines
+//			for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.STATEMACHINE, true)) {
+//				if (object == null) continue;
+//				String statemachineName = ((EventBNamed) object).getName() + "_" + refinementLevel;
+//				if (variables.containsKey(statemachine))
+//					activeStates.put(variables.get(statemachineName).getValue(), "TRUE");
+//			}
+//			
 		} else if (type == TranslationKind.MULTIVAR) {
 			for (EObject object : statemachine.getAllContained(StatemachinesPackage.Literals.STATE, true)) {
 				if (object == null) continue;

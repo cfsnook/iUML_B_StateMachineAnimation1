@@ -40,7 +40,8 @@ import de.prob.exceptions.ProBException;
 
 /**
  * @author vitaly
- *
+ * 
+ * @since 2.5 (due to package exported)
  */
 public class DiagramAnimator {
 
