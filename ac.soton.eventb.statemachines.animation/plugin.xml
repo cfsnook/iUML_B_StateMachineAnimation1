@@ -89,4 +89,13 @@
       </handler>
    </extension>
 
+   <extension
+         point="ac.soton.eventb.probsupport.animationParticipant">
+      <animationParticipant
+            class="ac.soton.eventb.statemachines.animation.participants.StatemachineAnimationParticipant"
+            id="ac.soton.eventb.statemachines.animation.StatemachineAnimationParticipant"
+            name="StatemachineAnimationParticipant">
+      </animationParticipant>
+   </extension>
+   
 </plugin>

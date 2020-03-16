@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010 University of Southampton.
+ * Copyright (c) 2010-2020 University of Southampton.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eventb.core.IEventBRoot;
+import org.eventb.core.IMachineRoot;
 import org.eventb.emf.core.machine.Machine;
+import org.eventb.emf.core.machine.MachinePackage;
 import org.xml.sax.SAXException;
 
 import ac.soton.eventb.statemachines.Statemachine;
@@ -46,7 +48,7 @@ import de.prob.exceptions.ProBException;
 public class DiagramAnimator {
 
 	private static DiagramAnimator animator;
-	private Machine machine;
+	//private Machine machine;
 	private List<Statemachine> rootStatemachines = new ArrayList<Statemachine>();
 	private boolean bms = false;
 	
@@ -65,12 +67,38 @@ public class DiagramAnimator {
 	public List<Statemachine> getRootStatemachines() {
 		return rootStatemachines;
 	}
+	
+	/**
+	 * @since 2.6
+	 */
+	public void addStatemachine(Statemachine statemachine) {
+		this.rootStatemachines.add(statemachine);
+		
+	}
+	
+	/**
+	 * @since 2.6
+	 */
+	public void reset() {
+		this.rootStatemachines.clear();
+	}
+
+	
+	
 
 	/**
+	 * This returns the machine that contains the first root statemachine.
+	 * 
+	 * It will be removed at next major issue since the diagram animator no longer needs it. 
+	 * If you need the machine get it from one of the root statemachines. 
+	 * i.e. ((Machine)getRootStatemachines().get(0).getContaining(MachinePackage.Literals.MACHINE));
+	 * 
 	 * @return
+	 * 	@deprecated
 	 */
 	public Machine getMachine() {
-		return machine;
+		return rootStatemachines == null || rootStatemachines.size()==0? null :
+				((Machine)getRootStatemachines().get(0).getContaining(MachinePackage.Literals.MACHINE));
 	}
 
 	/**
@@ -78,12 +106,28 @@ public class DiagramAnimator {
 	 * 
 	 * rootStatemachines must be obtained from the elements of the open editors otherwise the diagrams will not update
 	 * 
+	 * Now deprecate because machine is not used. 
+	 * Use start(List<Statemachine> rootStatemachines, IMachineRoot root, List<IFile> bmsFiles) instead
 	 * 
 	 * @throws ProBException 
-	 * 
+	 * @deprecated
 	 */
 	public void start(Machine machine, List<Statemachine> rootStatemachines, IEventBRoot root, List<IFile> bmsFiles) throws ProBException {
-		this.machine = machine;
+		start(rootStatemachines, (IMachineRoot) root, bmsFiles);
+	}
+	
+	/**
+	 * Starts the diagram animations for the given eventBRoot
+	 * 
+	 * rootStatemachines must be obtained from the elements of the open editors otherwise the diagrams will not update
+	 * 
+	 * 
+	 * @throws ProBException 
+	 * @since 2.6
+	 * 
+	 */
+	public void start(List<Statemachine> rootStatemachines, IMachineRoot root, List<IFile> bmsFiles) throws ProBException {
+//		this.machine = machine;
 		this.rootStatemachines = rootStatemachines;
 //		for (final Statemachine sm : rootStatemachines){
 //			TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(sm);
@@ -99,16 +143,17 @@ public class DiagramAnimator {
 //				}
 //			);
 //		}
-		System.out.println("Starting ProB for " + machine);
-		// start ProB
-		Animator probAnimator = Animator.getAnimator();
-		LoadEventBModelCommand.load(probAnimator, root);
-		
-		bms = false;
-		// if BMotionStudio files supplied, run them.
-		for (IFile bmsFile : bmsFiles){
-			bms = runBMotionStudio(bmsFile, probAnimator);
-		}
+//		System.out.println("Starting ProB for " + root.getComponentName());
+//		// start ProB
+//		Animator probAnimator = Animator.getAnimator();
+//		LoadEventBModelCommand.load(probAnimator, root);
+//		//probAnimator.getLanguageDependendPart().reload(probAnimator);
+//		
+//		bms = false;
+//		// if BMotionStudio files supplied, run them.
+//		for (IFile bmsFile : bmsFiles){
+//			bms = bms || runBMotionStudio(bmsFile, probAnimator);
+//		}
 	}
 	
 	
@@ -124,16 +169,18 @@ public class DiagramAnimator {
 //				}
 //			);
 //		}
-		machine = null;
+//		machine = null;
 		rootStatemachines.clear();
-		bms = false;
+//		bms = false;
+//		Animator.killAndReload();
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isRunning() {
-		return Animator.getAnimator().isRunning() && machine != null;
+		return Animator.getAnimator().isRunning();
+				//&& machine != null;
 	}
 
 	public boolean isRunningBMotionStudio(){
@@ -214,5 +261,5 @@ public class DiagramAnimator {
             visualization.setIsRunning(true);
             return visualization;
     }
-    
+  
 }

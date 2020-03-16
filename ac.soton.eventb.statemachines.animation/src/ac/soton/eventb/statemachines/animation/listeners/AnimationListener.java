@@ -38,11 +38,12 @@ import de.prob.core.domainobjects.Variable;
  */
 public class AnimationListener implements IAnimationListener {
 
+	
 	@Override
 	public void currentStateChanged(State currentState, Operation operation) {
 		DiagramAnimator animator = DiagramAnimator.getAnimator();
 		
-		if (animator.isRunning()) {
+//		if (animator.isRunning()) {
 			//TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(machine.eResource()); //getEditingDomain(machine);
 			for(Statemachine statemachine : animator.getRootStatemachines()){	
 				TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(statemachine);
@@ -60,7 +61,7 @@ public class AnimationListener implements IAnimationListener {
 					enabledOperations.get(op.getName()).add(op);
 				}
 				// map of active states - with instances currently in that state if lifted, or just TRUE if not lifted
-				Map<String, Object> activeStates = getActiveStates(animator,statemachine, variables);
+				Map<String, Object> activeStates = getActiveStates(statemachine, variables);
 				
 				boolean lifted = statemachine.getInstances()!=null;
 				// update states
@@ -97,7 +98,7 @@ public class AnimationListener implements IAnimationListener {
 				editingDomain.getCommandStack().execute(cc);			
 			}	
 		}
-	}
+//	}
 	
 	/**
 	 * @param animator
@@ -106,7 +107,7 @@ public class AnimationListener implements IAnimationListener {
 	 * @param type
 	 * @return
 	 */
-	private Map<String,Object> getActiveStates(DiagramAnimator animator, Statemachine statemachine, Map<String, Variable> variables) {
+	private Map<String,Object> getActiveStates(Statemachine statemachine, Map<String, Variable> variables) {
 		//retrieve a map of active states to instances for all state-machine states	
 		Map<String,Object> activeStates = new HashMap<String,Object>();
 		TranslationKind type = statemachine.getTranslation();
