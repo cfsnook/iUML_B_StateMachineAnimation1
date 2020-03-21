@@ -10,8 +10,6 @@ package ac.soton.eventb.statemachines.animation.policies;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -23,16 +21,17 @@ import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.CreateEditPolicies
 import org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.IEditPolicyProvider;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eventb.core.IMachineRoot;
 import org.eventb.emf.core.machine.Event;
+import org.eventb.emf.core.machine.Machine;
+import org.eventb.emf.core.machine.MachinePackage;
+import org.eventb.emf.persistence.EventBEMFUtils;
 
+import ac.soton.eventb.probsupport.AnimationManager;
+import ac.soton.eventb.probsupport.data.Operation_;
 import ac.soton.eventb.statemachines.Transition;
-import ac.soton.eventb.statemachines.animation.StatemachineAnimationPlugin;
 import ac.soton.eventb.statemachines.diagram.edit.parts.TransitionEditPart;
 import ac.soton.eventb.statemachines.diagram.edit.parts.TransitionGhostEditPart;
-import de.prob.core.Animator;
-import de.prob.core.command.ExecuteOperationCommand;
-import de.prob.core.domainobjects.Operation;
-import de.prob.exceptions.ProBException;
 
 /**
  * Edit policy that adds animation context menu to enabled transitions.
@@ -49,21 +48,21 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 			@Override
 			protected void showSelection() {
 				Transition transition = (Transition) ((View) getHost().getModel()).getElement();
-				Animator animator = Animator.getAnimator();
+				Machine machine = (Machine) transition.getContaining(MachinePackage.Literals.MACHINE);
+				IMachineRoot mchRoot = EventBEMFUtils.getRoot(machine);
 
 				//FIXME: more elaborate check required to test if concrete diagram is animated
 				// if animation running and operations available
-				if (animator.isRunning()
+				if (AnimationManager.isRunning(mchRoot)
 						&& transition.getOperations() != null 
 						&& !transition.getOperations().isEmpty()) {
 					
-					getHost().getViewer().deselectAll(); 	//deselect the transition ready for next interaction
+					getHost().getViewer().deselectAll(); 	//de-select the transition ready for next interaction
 					
-					List<Operation> enabledOperations = animator.getCurrentState().getEnabledOperations();
-					List<Operation> operations = new ArrayList<Operation>();
+					List<Operation_> enabledOperations = AnimationManager.getEnabledOperations(mchRoot);
+					List<Operation_> operations = new ArrayList<Operation_>();
 					EList<Event> events = transition.getElaborates();
-//					EList<?> operations = transition.getOperations();
-					for (Operation op : enabledOperations){
+					for (Operation_ op : enabledOperations){
 						String opName = op.getName();
 						for (Event ev : events){
 							if (opName.equals(ev.getName()) ){
@@ -76,7 +75,7 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 
 						@Override
 						public String getText(Object element) {
-							Operation operation = (Operation) element;
+							Operation_ operation = (Operation_) element;
 							List<String> arguments = operation.getArguments();
 							String text = operation.getName() +
 								(arguments == null || arguments.isEmpty() ? "" : " " + arguments.toString());
@@ -87,15 +86,7 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 					
 					// execute selected
 					if (operation != null) {
-						try {
-							ExecuteOperationCommand.executeOperation(animator, (Operation) operation);
-						} catch (ProBException e) {
-									StatemachineAnimationPlugin.getDefault().getLog().log(
-											new Status(IStatus.ERROR,
-													StatemachineAnimationPlugin.PLUGIN_ID,
-													"Execution of ProB operation failed for: " + operation.toString(),
-													e));
-						}
+						AnimationManager.executeOperation(mchRoot, (Operation_)operation, false);
 					}
 				}
 			}
