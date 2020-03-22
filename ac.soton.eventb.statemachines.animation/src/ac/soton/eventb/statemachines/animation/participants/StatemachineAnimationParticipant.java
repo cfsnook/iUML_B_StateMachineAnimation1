@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2020-2020 University of Southampton.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 package ac.soton.eventb.statemachines.animation.participants;
 
 import java.util.ArrayList;
@@ -31,10 +38,22 @@ import ac.soton.eventb.statemachines.Transition;
 import ac.soton.eventb.statemachines.TranslationKind;
 import ac.soton.eventb.statemachines.diagram.part.StatemachinesDiagramEditor;
 
+/**
+ * This is the class that is registered with the prob support plugin
+ * so that the statemachine animation can participate when an
+ * animation is started.
+ * 
+ * @author cfsnook
+ *
+ */
 public class StatemachineAnimationParticipant implements IAnimationParticipant {
 
+	// map of the currently animated statemachine editors for each animated mchRoot
 	private Map<IMachineRoot, List<StatemachinesDiagramEditor>> editorsMap = new HashMap<IMachineRoot, List<StatemachinesDiagramEditor>>();
 	
+	/* (non-Javadoc)
+	 * @see ac.soton.eventb.probsupport.IAnimationParticipant#startAnimating(org.eventb.core.IMachineRoot)
+	 */
 	@Override
 	public void startAnimating(IMachineRoot mchRoot) {
 		String mchRootPath = mchRoot.getPath().toString();

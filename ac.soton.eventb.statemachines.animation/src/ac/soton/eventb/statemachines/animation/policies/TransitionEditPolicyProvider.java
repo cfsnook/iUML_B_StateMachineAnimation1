@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010 University of Southampton.
+ * Copyright (c) 2010-2020 University of Southampton.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,9 @@ import ac.soton.eventb.statemachines.diagram.edit.parts.TransitionGhostEditPart;
  */
 public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.services.editpolicy.IEditPolicyProvider#createEditPolicies(org.eclipse.gef.EditPart)
+	 */
 	@Override
 	public void createEditPolicies(EditPart editPart) {
 		editPart.installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new SelectionEditPolicy() {
@@ -51,7 +54,6 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 				Machine machine = (Machine) transition.getContaining(MachinePackage.Literals.MACHINE);
 				IMachineRoot mchRoot = EventBEMFUtils.getRoot(machine);
 
-				//FIXME: more elaborate check required to test if concrete diagram is animated
 				// if animation running and operations available
 				if (AnimationManager.isRunning(mchRoot)
 						&& transition.getOperations() != null 
@@ -97,6 +99,9 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#provides(org.eclipse.gmf.runtime.common.core.service.IOperation)
+	 */
 	@Override
 	public boolean provides(IOperation operation) {
 		if (operation instanceof CreateEditPoliciesOperation) {
@@ -108,10 +113,16 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#addProviderChangeListener(org.eclipse.gmf.runtime.common.core.service.IProviderChangeListener)
+	 */
 	@Override
 	public void addProviderChangeListener(IProviderChangeListener listener) {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.common.core.service.IProvider#removeProviderChangeListener(org.eclipse.gmf.runtime.common.core.service.IProviderChangeListener)
+	 */
 	@Override
 	public void removeProviderChangeListener(IProviderChangeListener listener) {
 	}

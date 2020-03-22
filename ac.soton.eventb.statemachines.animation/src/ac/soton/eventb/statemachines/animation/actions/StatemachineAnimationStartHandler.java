@@ -1,4 +1,3 @@
-package ac.soton.eventb.statemachines.animation.actions;
 /**
  * Copyright (c) 2020-2020 University of Southampton.
  * All rights reserved. This program and the accompanying materials
@@ -6,6 +5,7 @@ package ac.soton.eventb.statemachines.animation.actions;
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
+package ac.soton.eventb.statemachines.animation.actions;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -22,10 +22,11 @@ import ac.soton.eventb.probsupport.handlers.AnimationStartHandler;
 import ac.soton.eventb.statemachines.Statemachine;
 
 /**
- * Starts ProB animation via the ProB support plugin,
+ * Starts ProB animation via the ProB support plugin
  *  when the command is made from a statemachine diagram
+ *  
  * 
- * @author cfs
+ * @author cfsnook
  *
  */
 public class StatemachineAnimationStartHandler extends AnimationStartHandler {
