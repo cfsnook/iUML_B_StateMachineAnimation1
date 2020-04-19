@@ -111,6 +111,11 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 		}
 	}
 
+	@Override
+	public void restartAnimation(IMachineRoot mchRoot) {
+		updateAnimation(mchRoot);
+	}
+	
 	//////////////////////////////// private ///////////////////////////////
 	
 	/**
