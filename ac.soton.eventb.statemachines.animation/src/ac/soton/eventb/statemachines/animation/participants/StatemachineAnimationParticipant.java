@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -64,22 +65,27 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	    	for(IEditorReference editorRef: page.getEditorReferences()){
 	    		IEditorPart editor = editorRef.getEditor(true);
 				if (editor instanceof StatemachinesDiagramEditor ){
-					Statemachine statemachine = (Statemachine) ((StatemachinesDiagramEditor)editor).getDiagram().getElement();
+					StatemachinesDiagramEditor smDiagramEditor = (StatemachinesDiagramEditor) editor;
+					Statemachine statemachine = (Statemachine) smDiagramEditor.getDiagram().getElement();
 					String smResourcePath = statemachine.eResource().getURI().toPlatformString(false);
 					if (mchRootPath.equals(smResourcePath)) {
-		    			if (editor.isDirty()){
-		    				editor.doSave(new NullProgressMonitor());
+		    			if (smDiagramEditor.isDirty()){
+		    				smDiagramEditor.doSave(new NullProgressMonitor());
 		    			}
 	    				//let the editor know that we are animating so that it doesn't try to save animation artifacts
-			    		((StatemachinesDiagramEditor)editor).startAnimating();
-			    		editors.add((StatemachinesDiagramEditor)editor);
+		    			smDiagramEditor.startAnimating();
+			    		editors.add(smDiagramEditor);
+			    		//clearAnimationArtifacts(smDiagramEditor);	//just in case it didn't get cleared last time
+			    		//smDiagramEditor.
 					}
 		    	}
 	    	}
     	}
-		editorsMap.put(mchRoot, editors);
-	}
+		if (!editors.isEmpty()) {
+			editorsMap.put(mchRoot, editors);
+		}
 		updateAnimation(mchRoot);
+	}
 	
 	/* (non-Javadoc)
 	 * @see ac.soton.eventb.probsupport.IAnimationParticipant#stopAnimating(org.eventb.core.IMachineRoot)
@@ -332,4 +338,6 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	     }
 		return ret;
 	}
+
+
 }
