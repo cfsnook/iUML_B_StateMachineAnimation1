@@ -87,7 +87,7 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	public void stopAnimating(IMachineRoot mchRoot) {
 		if (editorsMap.containsKey(mchRoot)) {
 			for (StatemachinesDiagramEditor statemachineDiagramEditor : editorsMap.get(mchRoot)){
-				clearAnimationArtifacts((Statemachine) statemachineDiagramEditor.getDiagram().getElement());
+				clearAnimationArtifacts(statemachineDiagramEditor);
 				statemachineDiagramEditor.stopAnimating();
 			}
 			editorsMap.remove(mchRoot);
@@ -124,7 +124,13 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	 * 
 	 * @param statemachine
 	 */
-	private void clearAnimationArtifacts(Statemachine statemachine) {
+	private void clearAnimationArtifacts(StatemachinesDiagramEditor statemachineDiagramEditor) {
+		
+		Diagram diagram = statemachineDiagramEditor.getDiagram();
+		if (diagram == null) {		// the diagram may be closed by now
+			return;
+		}
+		Statemachine statemachine = (Statemachine) diagram.getElement();
 		TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(statemachine);
 			
 		CompoundCommand cc = new CompoundCommand();
