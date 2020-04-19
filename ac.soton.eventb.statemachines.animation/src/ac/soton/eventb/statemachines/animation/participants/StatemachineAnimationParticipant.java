@@ -79,6 +79,7 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
     	}
 		editorsMap.put(mchRoot, editors);
 	}
+		updateAnimation(mchRoot);
 	
 	/* (non-Javadoc)
 	 * @see ac.soton.eventb.probsupport.IAnimationParticipant#stopAnimating(org.eventb.core.IMachineRoot)
