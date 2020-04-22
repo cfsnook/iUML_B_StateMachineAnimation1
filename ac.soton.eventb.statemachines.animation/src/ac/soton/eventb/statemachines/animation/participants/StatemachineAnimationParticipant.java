@@ -56,7 +56,7 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	 * @see ac.soton.eventb.probsupport.IAnimationParticipant#startAnimating(org.eventb.core.IMachineRoot)
 	 */
 	@Override
-	public void startAnimating(IMachineRoot mchRoot) {
+	public void startAnimation(IMachineRoot mchRoot) {
 		String mchRootPath = mchRoot.getPath().toString();
 		List<StatemachinesDiagramEditor> editors = new ArrayList<StatemachinesDiagramEditor>();
 		//Find all the statemachines that are open as diagrams 
@@ -91,7 +91,7 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	 * @see ac.soton.eventb.probsupport.IAnimationParticipant#stopAnimating(org.eventb.core.IMachineRoot)
 	 */
 	@Override
-	public void stopAnimating(IMachineRoot mchRoot) {
+	public void stopAnimation(IMachineRoot mchRoot) {
 		if (editorsMap.containsKey(mchRoot)) {
 			for (StatemachinesDiagramEditor statemachineDiagramEditor : editorsMap.get(mchRoot)){
 				clearAnimationArtifacts(statemachineDiagramEditor);
