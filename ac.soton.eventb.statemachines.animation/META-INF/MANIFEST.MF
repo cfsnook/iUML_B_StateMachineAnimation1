@@ -20,4 +20,3 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %Bundle-Vendor
 Automatic-Module-Name: ac.soton.eventb.statemachines.animation
-Export-Package: ac.soton.eventb.statemachines.animation
