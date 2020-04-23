@@ -24,8 +24,18 @@
          id="ac.soton.eventb.statemachines.animation.feature"
          version="0.0.0"/>
 
-   <includes
-         id="ac.soton.eventb.statemachines.animation.source.feature"
-         version="0.0.0"/>
+   <plugin
+         id="ac.soton.eventb.statemachines.animation.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ac.soton.eventb.statemachines.animation.branding.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
