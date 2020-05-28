@@ -51,44 +51,45 @@ public class TransitionEditPolicyProvider implements IEditPolicyProvider {
 			@Override
 			protected void showSelection() {
 				Transition transition = (Transition) ((View) getHost().getModel()).getElement();
-				Machine machine = (Machine) transition.getContaining(MachinePackage.Literals.MACHINE);
-				IMachineRoot mchRoot = EventBEMFUtils.getRoot(machine);
-
-				// if animation running and operations available
-				if (AnimationManager.isRunning(mchRoot)
-						&& transition.getOperations() != null 
-						&& !transition.getOperations().isEmpty()) {
-					
-					getHost().getViewer().deselectAll(); 	//de-select the transition ready for next interaction
-					
-					List<Operation_> enabledOperations = AnimationManager.getEnabledOperations(mchRoot);
-					List<Operation_> operations = new ArrayList<Operation_>();
-					EList<Event> events = transition.getElaborates();
-					for (Operation_ op : enabledOperations){
-						String opName = op.getName();
-						for (Event ev : events){
-							if (opName.equals(ev.getName()) ){
-								operations.add(op);
-							}	
+				EList<Event> events = transition.getElaborates();
+				if (events!=null && events.size()>0) {
+					Machine machine = (Machine) events.get(0).getContaining(MachinePackage.Literals.MACHINE);
+					IMachineRoot mchRoot = EventBEMFUtils.getRoot(machine);
+					// if animation running and operations available
+					if (AnimationManager.isRunning(mchRoot)
+							&& transition.getOperations() != null 
+							&& !transition.getOperations().isEmpty()) {
+						
+						getHost().getViewer().deselectAll(); 	//de-select the transition ready for next interaction
+						
+						List<Operation_> enabledOperations = AnimationManager.getEnabledOperations(mchRoot);
+						List<Operation_> operations = new ArrayList<Operation_>();
+						for (Operation_ op : enabledOperations){
+							String opName = op.getName();
+							for (Event ev : events){
+								if (opName.equals(ev.getName()) ){
+									operations.add(op);
+								}	
+							}
 						}
-					}
-					// show selection menu
-					PopupMenu menu = new PopupMenu(operations, new LabelProvider() {
-
-						@Override
-						public String getText(Object element) {
-							Operation_ operation = (Operation_) element;
-							List<String> arguments = operation.getArguments();
-							String text = operation.getName() +
-								(arguments == null || arguments.isEmpty() ? "" : " " + arguments.toString());
-							return text;
-						}});
-					menu.show(getHost().getViewer().getControl());
-					Object operation = menu.getResult();
-					
-					// execute selected
-					if (operation != null) {
-						AnimationManager.executeOperation(mchRoot, (Operation_)operation, false);
+						// show selection menu
+						PopupMenu menu = new PopupMenu(operations, new LabelProvider() {
+	
+							@Override
+							public String getText(Object element) {
+								Operation_ operation = (Operation_) element;
+								List<String> arguments = operation.getArguments();
+								String text = operation.getName() +
+									(arguments == null || arguments.isEmpty() ? "" : " " + arguments.toString());
+								return text;
+							}});
+						menu.show(getHost().getViewer().getControl());
+						Object operation = menu.getResult();
+						
+						// execute selected
+						if (operation != null) {
+							AnimationManager.executeOperation(mchRoot, (Operation_)operation, false);
+						}
 					}
 				}
 			}
