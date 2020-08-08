@@ -27,8 +27,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eventb.core.IMachineRoot;
 import org.eventb.emf.core.EventBNamed;
+import org.eventb.emf.core.EventBObject;
 import org.eventb.emf.core.machine.Event;
+import org.eventb.emf.core.machine.Machine;
+import org.eventb.emf.persistence.EventBEMFUtils;
 
+import ac.soton.eventb.emf.diagrams.util.custom.DiagramUtils;
 import ac.soton.eventb.probsupport.AnimationManager;
 import ac.soton.eventb.probsupport.IAnimationParticipant;
 import ac.soton.eventb.probsupport.data.Operation_;
@@ -57,7 +61,6 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 	 */
 	@Override
 	public void startAnimation(IMachineRoot mchRoot) {
-		String mchRootPath = mchRoot.getPath().toString();
 		List<StatemachinesDiagramEditor> editors = new ArrayList<StatemachinesDiagramEditor>();
 		//Find all the statemachines that are open as diagrams 
 		// 		(these must come from the editors as each editor has a different local copy)
@@ -67,8 +70,10 @@ public class StatemachineAnimationParticipant implements IAnimationParticipant {
 				if (editor instanceof StatemachinesDiagramEditor ){
 					StatemachinesDiagramEditor smDiagramEditor = (StatemachinesDiagramEditor) editor;
 					Statemachine statemachine = (Statemachine) smDiagramEditor.getDiagram().getElement();
-					String smResourcePath = statemachine.eResource().getURI().toPlatformString(false);
-					if (mchRootPath.equals(smResourcePath)) {
+					EventBObject target = DiagramUtils.getTranslationTarget(statemachine);
+					IMachineRoot targetRoot = (target instanceof Machine)? EventBEMFUtils.getRoot((Machine)target) : null;
+					//if the statemachine translates to the Machine being animated...
+					if (mchRoot.equals(targetRoot)) { 
 		    			if (smDiagramEditor.isDirty()){
 		    				smDiagramEditor.doSave(new NullProgressMonitor());
 		    			}
