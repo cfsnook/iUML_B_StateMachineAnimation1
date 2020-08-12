@@ -15,9 +15,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eventb.core.IMachineRoot;
 import org.eventb.emf.core.machine.Machine;
-import org.eventb.emf.core.machine.MachinePackage;
 import org.eventb.emf.persistence.EventBEMFUtils;
 
+import ac.soton.eventb.emf.diagrams.util.custom.DiagramUtils;
 import ac.soton.eventb.probsupport.handlers.AnimationStopHandler;
 import ac.soton.eventb.statemachines.Statemachine;
 
@@ -42,7 +42,7 @@ public class StatemachineAnimationStopHandler extends AnimationStopHandler {
 		EObject element = ((DiagramEditor)activeEditor).getDiagram().getElement();
 		if (!(element instanceof Statemachine)) return null;
 
-		Machine machine = (Machine) ((Statemachine)element).getContaining(MachinePackage.Literals.MACHINE);
+		Machine machine = (Machine) DiagramUtils.getTranslationTarget((Statemachine)element);
 		
 		return EventBEMFUtils.getRoot(machine);
    	}
