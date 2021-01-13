@@ -9,7 +9,7 @@
   <parent>
     <groupId>ac.soton.eventb.statemachines.animation</groupId>
     <artifactId>releng</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0.release</version>
     <relativePath>./ac.soton.eventb.statemachines.animation.releng</relativePath>
   </parent>
 
